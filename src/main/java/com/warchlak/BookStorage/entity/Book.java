@@ -1,5 +1,7 @@
 package com.warchlak.BookStorage.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 
 @Entity
@@ -19,19 +21,20 @@ public class Book
 	@Column
 	private String tags;
 	
-	@OneToOne(mappedBy = "book")
-	private ImageLinkHolder imageLinkHolder;
+	@OneToOne
+	@JsonBackReference
+	private Image image;
 	
 	protected Book()
 	{
 	}
 	
-	public Book(String title, String description, String tags, ImageLinkHolder imageLinkHolder)
+	public Book(String title, String description, String tags, Image image)
 	{
 		this.title = title;
 		this.description = description;
 		this.tags = tags;
-		this.imageLinkHolder = imageLinkHolder;
+		this.image = image;
 	}
 	
 	public int getId()
@@ -74,13 +77,13 @@ public class Book
 		this.tags = tags;
 	}
 	
-	public ImageLinkHolder getImageLinkHolder()
+	public Image getImage()
 	{
-		return imageLinkHolder;
+		return image;
 	}
 	
-	public void setImageLinkHolder(ImageLinkHolder imageLinkHolder)
+	public void setImage(Image image)
 	{
-		this.imageLinkHolder = imageLinkHolder;
+		this.image = image;
 	}
 }

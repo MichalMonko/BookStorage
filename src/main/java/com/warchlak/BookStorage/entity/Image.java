@@ -1,15 +1,19 @@
 package com.warchlak.BookStorage.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 
 @Entity
-public class ImageLinkHolder
+@Table(name = "image")
+public class Image
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	
-	@OneToOne
+	@OneToOne(mappedBy = "image")
+	@JsonManagedReference
 	private Book book;
 	
 	@Column(name = "full_size_path")
@@ -18,9 +22,9 @@ public class ImageLinkHolder
 	@Column(name = "miniature_size_path")
 	private String imageMiniaturePath;
 	
-	protected ImageLinkHolder(){}
+	protected Image(){}
 	
-	public ImageLinkHolder(Book book, String imageFullSizePath, String imageMiniaturePath)
+	public Image(Book book, String imageFullSizePath, String imageMiniaturePath)
 	{
 		this.book = book;
 		this.imageFullSizePath = imageFullSizePath;
