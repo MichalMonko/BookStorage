@@ -9,7 +9,7 @@ import javax.persistence.*;
 public class Book
 {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
 	@Column
@@ -21,7 +21,7 @@ public class Book
 	@Column
 	private String tags;
 	
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	@JsonBackReference
 	private Image image;
 	

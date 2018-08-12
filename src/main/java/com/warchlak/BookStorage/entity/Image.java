@@ -1,6 +1,7 @@
 package com.warchlak.BookStorage.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 
@@ -9,10 +10,10 @@ import javax.persistence.*;
 public class Image
 {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	@OneToOne(mappedBy = "image")
+	@OneToOne(mappedBy = "image",cascade = CascadeType.ALL)
 	@JsonManagedReference
 	private Book book;
 	
@@ -27,6 +28,12 @@ public class Image
 	public Image(Book book, String imageFullSizePath, String imageMiniaturePath)
 	{
 		this.book = book;
+		this.imageFullSizePath = imageFullSizePath;
+		this.imageMiniaturePath = imageMiniaturePath;
+	}
+	
+	public Image(String imageFullSizePath, String imageMiniaturePath)
+	{
 		this.imageFullSizePath = imageFullSizePath;
 		this.imageMiniaturePath = imageMiniaturePath;
 	}

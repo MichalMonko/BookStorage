@@ -1,28 +1,58 @@
 package com.warchlak.BookStorage.controller;
 
 import com.warchlak.BookStorage.entity.Book;
-import com.warchlak.BookStorage.repositoriy.BookRepository;
+import com.warchlak.BookStorage.service.BookService;
+import com.warchlak.BookStorage.util.NullChecker;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/book")
 public class bookRestController
 {
-	private final BookRepository repository;
+	
+	private final BookService bookService;
 	
 	@Autowired
-	public bookRestController(BookRepository repository)
+	public bookRestController(BookService bookService)
 	{
-		this.repository = repository;
+		this.bookService = bookService;
 	}
 	
-	@RequestMapping("/getAll")
+	@GetMapping
 	public List<Book> getAllBooks()
 	{
-		return repository.findAll();
+		return bookService.findAll();
+	}
+	
+	@GetMapping("/{id}")
+	public Book getBookById(@PathVariable("id") int bookId)
+	{
+		return bookService.findOneById(bookId);
+	}
+	
+	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
+	public void saveBook(@RequestBody Book book)
+	{
+		NullChecker.checkForNull(book);
+		bookService.save(book);
+	}
+	
+	@PutMapping("/{id}")
+	@ResponseStatus(HttpStatus.OK)
+	public void updateBook(@PathVariable("id") int bookId)
+	{
+		bookService.updateById(bookId);
+	}
+	
+	@DeleteMapping("/{id}")
+	@ResponseStatus(HttpStatus.OK)
+	public void deleteBook(@PathVariable("id") int bookId)
+	{
+		bookService.deleteById(bookId);
 	}
 }
