@@ -11,13 +11,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
 import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class RepositoryQueriesTest
 {
-	
+private final static int BOOKS_NUMBER = 2;
 	@Autowired
 	ApplicationContext applicationContext;
 	
@@ -42,6 +43,36 @@ public class RepositoryQueriesTest
 	{
 		Optional<Book> bookWrapper = bookRepository.findById(10000000);
 		Assert.assertFalse("book is found although it should not", bookWrapper.isPresent());
+		
+		bookWrapper = bookRepository.findById(-1);
+		Assert.assertFalse("book is found when id is negative", bookWrapper.isPresent());
+	}
+	
+	@Test
+	public void assert_no_book_found_when_negative_id()
+	{
+		Optional<Book> bookWrapper = bookRepository.findById(-1);
+		Assert.assertFalse("book is found when id is negative", bookWrapper.isPresent());
+	}
+	
+	@Test public void assert_two_books_found_when_find_all_executed()
+	{
+		List<Book> books = bookRepository.findAll();
+		Assert.assertEquals(books.size(), BOOKS_NUMBER);
+	}
+	
+	@Test
+	public void assert_one_book_found_when_valid_title_in_search_by_title_ignore_case()
+	{
+		List<Book> books = bookRepository.findAllByTitleIgnoreCase("JAVA BOOK");
+		Assert.assertEquals(books.size(),1);
+	}
+	
+	@Test
+	public void assert_book_not_found_when_invalid_title_in_search_by_title_ignore_case()
+	{
+		List<Book> books = bookRepository.findAllByTitleIgnoreCase("Invalid Book Title");
+		Assert.assertEquals(books.size(),0);
 	}
 	
 	@Test
