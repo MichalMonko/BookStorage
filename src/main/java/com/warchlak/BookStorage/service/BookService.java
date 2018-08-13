@@ -1,12 +1,9 @@
 package com.warchlak.BookStorage.service;
 
 import com.warchlak.BookStorage.entity.Book;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
-@Service
 public interface BookService
 {
 	public Book findOneById(int id);
@@ -17,7 +14,7 @@ public interface BookService
 	
 	public Book save(Book book);
 	
-	public Book updateById(int id);
+	public Book update(Book book);
 	
 	public void deleteById(int id);
 }

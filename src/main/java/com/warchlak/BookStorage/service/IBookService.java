@@ -5,12 +5,15 @@ import com.warchlak.BookStorage.configuration.EnglishMessageSource;
 import com.warchlak.BookStorage.entity.Book;
 import com.warchlak.BookStorage.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class IBookService implements BookService
 {
 	private final BookRepository repository;
@@ -55,12 +58,11 @@ public class IBookService implements BookService
 	}
 	
 	@Override
-	public Book updateById(int id)
+	public Book update(Book book)
 	{
-		Optional<Book> bookWrapper = repository.findById(id);
-		if (bookWrapper.isPresent())
+		if (repository.existsById(book.getId()))
 		{
-			return repository.save(bookWrapper.get());
+			return repository.save(book);
 		}
 		else
 		{
@@ -73,6 +75,14 @@ public class IBookService implements BookService
 	@Override
 	public void deleteById(int id)
 	{
-		repository.deleteById(id);
+		try
+		{
+			repository.deleteById(id);
+		} catch (EmptyResultDataAccessException e)
+		{
+			throw new MyResourceNotFoundException(
+					messageSource.getCustomMessage(
+							"exception.ResourceNotFound") + e.getLocalizedMessage());
+		}
 	}
 }

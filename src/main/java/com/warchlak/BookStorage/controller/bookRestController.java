@@ -42,11 +42,11 @@ public class bookRestController
 		bookService.save(book);
 	}
 	
-	@PutMapping("/{id}")
+	@PutMapping
 	@ResponseStatus(HttpStatus.OK)
-	public void updateBook(@PathVariable("id") int bookId)
+	public void updateBook(@RequestBody Book book)
 	{
-		bookService.updateById(bookId);
+		bookService.update(book);
 	}
 	
 	@DeleteMapping("/{id}")
