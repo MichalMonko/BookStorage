@@ -6,7 +6,10 @@ import org.junit.runners.Suite;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({BookServiceTest.class, RepositoryQueriesTest.class})
+@Suite.SuiteClasses({
+		BookServiceTest.class,
+		RepositoryQueriesTest.class,
+		RestApiTest.class})
 @SpringBootTest
 public class ApplicationTest
 {

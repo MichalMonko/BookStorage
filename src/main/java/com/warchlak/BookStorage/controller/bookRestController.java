@@ -28,7 +28,7 @@ public class bookRestController
 		return bookService.findAll();
 	}
 	
-	@GetMapping("/{id}")
+	@GetMapping(value = "/{id}", produces = "application/json")
 	public Book getBookById(@PathVariable("id") int bookId)
 	{
 		return bookService.findOneById(bookId);
