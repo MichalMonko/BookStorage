@@ -1,5 +1,6 @@
 package com.warchlak.BookStorage;
 
+import com.warchlak.BookStorage.ExceptionHandling.customExceptions.InvalidIdState;
 import com.warchlak.BookStorage.ExceptionHandling.customExceptions.MyResourceNotFoundException;
 import com.warchlak.BookStorage.entity.Book;
 import com.warchlak.BookStorage.mockBeans.entity.MockBookFactory;
@@ -59,6 +60,24 @@ public class BookServiceTest
 		Assert.assertSame(book, returnedBook);
 	}
 	
+	@Test(expected = InvalidIdState.class)
+	public void assert_exception_when_saving_book_with_specified_id()
+	{
+		Book book = MockBookFactory.getMockBook();
+		book.setId(100);
+		
+		service.save(book);
+	}
+	
+	@Test(expected = InvalidIdState.class)
+	public void assert_exception_when_saving_book_with_id_already_taken()
+	{
+		Book book = MockBookFactory.getMockBook();
+		book.setId(1);
+		
+		service.save(book);
+	}
+	
 	@Test
 	public void assert_book_updated()
 	{
@@ -73,6 +92,14 @@ public class BookServiceTest
 	
 	@Test(expected = MyResourceNotFoundException.class)
 	public void assert_exception_when_updating_book_which_does_not_exist()
+	{
+		Book book = MockBookFactory.getMockBook();
+		book.setId(10000);
+		service.update(book);
+	}
+	
+	@Test(expected = InvalidIdState.class)
+	public void assert_exception_when_updating_book_with_null_id()
 	{
 		Book book = MockBookFactory.getMockBook();
 		service.update(book);

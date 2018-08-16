@@ -10,7 +10,7 @@ public class Book
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private Integer id;
 	
 	@Column
 	private String title;
@@ -37,7 +37,7 @@ public class Book
 		this.image = image;
 	}
 	
-	public int getId()
+	public Integer getId()
 	{
 		return id;
 	}

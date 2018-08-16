@@ -87,6 +87,7 @@ public class RestApiTest
 	public void assert_return_status_isCreated_when_post_book() throws Exception
 	{
 		String requestBody = json().build().writeValueAsString(MockBookFactory.getMockBook());
+		System.out.println(requestBody);
 		
 		mockMvc.perform((post("/api/book"))
 				.content(requestBody)

@@ -1,7 +1,6 @@
 package com.warchlak.BookStorage.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 
@@ -11,7 +10,7 @@ public class Image
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private Integer id;
 	
 	@OneToOne(mappedBy = "image",cascade = CascadeType.ALL)
 	@JsonManagedReference
@@ -38,7 +37,7 @@ public class Image
 		this.imageMiniaturePath = imageMiniaturePath;
 	}
 	
-	public int getId()
+	public Integer getId()
 	{
 		return id;
 	}

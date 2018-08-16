@@ -1,5 +1,6 @@
 package com.warchlak.BookStorage.service;
 
+import com.warchlak.BookStorage.ExceptionHandling.customExceptions.InvalidIdState;
 import com.warchlak.BookStorage.ExceptionHandling.customExceptions.MyResourceNotFoundException;
 import com.warchlak.BookStorage.configuration.EnglishMessageSource;
 import com.warchlak.BookStorage.entity.Book;
@@ -54,21 +55,29 @@ public class IBookService implements BookService
 	@Override
 	public Book save(Book book)
 	{
+		if (book.getId() != null && book.getId() != 0)
+		{
+			throw new InvalidIdState(messageSource.getCustomMessage("exception.InvalidIdState.idShouldBeNull"));
+		}
 		return repository.save(book);
 	}
 	
 	@Override
 	public Book update(Book book)
 	{
-		if (repository.existsById(book.getId()))
+		
+		if (book.getId() == null)
 		{
-			return repository.save(book);
+			throw new InvalidIdState(messageSource.getCustomMessage("exception.InvalidIdState.IdShouldNotBeNull"));
 		}
-		else
+		else if (!repository.existsById(book.getId()))
 		{
 			throw new MyResourceNotFoundException(
 					messageSource.getCustomMessage(
 							"exception.ResourceNotFound"));
+		}
+		{
+			return repository.save(book);
 		}
 	}
 	

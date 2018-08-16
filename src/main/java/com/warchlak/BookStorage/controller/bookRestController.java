@@ -38,6 +38,7 @@ public class bookRestController
 	@ResponseStatus(HttpStatus.CREATED)
 	public void saveBook(@RequestBody Book book)
 	{
+		System.out.println(book);
 		NullChecker.checkForNull(book);
 		bookService.save(book);
 	}
