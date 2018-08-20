@@ -1,6 +1,6 @@
 package com.warchlak.BookStorage.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 
@@ -21,20 +21,24 @@ public class Book
 	@Column
 	private String tags;
 	
-	@OneToOne(cascade = CascadeType.ALL)
-	@JsonBackReference
-	private Image image;
+	@Column
+	private double price;
+	
+	@Column(name = "image_link")
+	@Nullable
+	private String imageLink;
 	
 	protected Book()
 	{
 	}
 	
-	public Book(String title, String description, String tags, Image image)
+	public Book(String title, String description, String tags,double price, @Nullable String imageLink)
 	{
 		this.title = title;
 		this.description = description;
 		this.tags = tags;
-		this.image = image;
+		this.price = price;
+		this.imageLink = imageLink;
 	}
 	
 	public Integer getId()
@@ -72,18 +76,34 @@ public class Book
 		return tags;
 	}
 	
+	public double getPrice()
+	{
+		return price;
+	}
+	
+	public void setPrice(double price)
+	{
+		this.price = price;
+	}
+	
 	public void setTags(String tags)
 	{
 		this.tags = tags;
 	}
 	
-	public Image getImage()
+	public void setId(Integer id)
 	{
-		return image;
+		this.id = id;
 	}
 	
-	public void setImage(Image image)
+	@Nullable
+	public String getImageLink()
 	{
-		this.image = image;
+		return imageLink;
+	}
+	
+	public void setImageLink(@Nullable String imageLink)
+	{
+		this.imageLink = imageLink;
 	}
 }
