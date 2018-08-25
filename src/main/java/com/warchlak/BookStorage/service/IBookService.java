@@ -10,6 +10,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,11 +22,15 @@ public class IBookService implements BookService
 	
 	private final EnglishMessageSource messageSource;
 	
+	private final FileSystemStorageService fileSystemStorageService;
+	
 	@Autowired
-	public IBookService(BookRepository repository, EnglishMessageSource messageSource)
+	public IBookService(BookRepository repository, EnglishMessageSource messageSource,
+	                    FileSystemStorageService fileSystemStorageService)
 	{
 		this.repository = repository;
 		this.messageSource = messageSource;
+		this.fileSystemStorageService = fileSystemStorageService;
 	}
 	
 	@Override
@@ -86,6 +91,20 @@ public class IBookService implements BookService
 	{
 		try
 		{
+			Book book = repository.getOne(id);
+			String imageFilename = book.getImageLink();
+			
+			if (null != imageFilename)
+			{
+				try
+				{
+					fileSystemStorageService.delete(imageFilename);
+				} catch (IOException e)
+				{
+				
+				}
+			}
+			
 			repository.deleteById(id);
 		} catch (EmptyResultDataAccessException e)
 		{

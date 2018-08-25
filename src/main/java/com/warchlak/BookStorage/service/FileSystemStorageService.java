@@ -5,12 +5,15 @@ import com.warchlak.BookStorage.configuration.EnglishMessageSource;
 import com.warchlak.BookStorage.properties.StorageProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.*;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
 
 @Service
 public class FileSystemStorageService implements StorageService
@@ -28,15 +31,9 @@ public class FileSystemStorageService implements StorageService
 	}
 	
 	@Override
-	public void store(MultipartFile file)
+	public String store(MultipartFile file)
 	{
-		String originalFilename = file.getOriginalFilename();
-		String filename = "";
-		
-		if (null != originalFilename)
-		{
-			filename = StringUtils.cleanPath(originalFilename);
-		}
+		String filename = UUID.randomUUID().toString();
 		
 		if (file.isEmpty())
 		{
@@ -55,6 +52,7 @@ public class FileSystemStorageService implements StorageService
 		{
 			Path location = this.storageLocation.resolve(filename);
 			Files.copy(inputStream, location);
+			return filename;
 		} catch (FileAlreadyExistsException e)
 		{
 			throw new FileStorageException(messageSource.getCustomMessage("exception.FileStorageException.fileAlreadyExists",
@@ -64,5 +62,13 @@ public class FileSystemStorageService implements StorageService
 			throw new FileStorageException(messageSource.getCustomMessage("exception.FileStorageException.errorWritingToFile",
 					new Object[]{filename}));
 		}
+	}
+	
+	@Override
+	public boolean delete(String filename) throws IOException
+	{
+		Path fileLocation = storageLocation.resolve(filename);
+		Files.delete(fileLocation);
+		return true;
 	}
 }
