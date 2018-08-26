@@ -6,13 +6,14 @@ import com.warchlak.BookStorage.configuration.EnglishMessageSource;
 import com.warchlak.BookStorage.entity.Book;
 import com.warchlak.BookStorage.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Service
 @Transactional
@@ -101,12 +102,12 @@ public class IBookService implements BookService
 					fileSystemStorageService.delete(imageFilename);
 				} catch (IOException e)
 				{
-				
+					Logger.getLogger(this.getClass().getName()).info("File " + imageFilename + " was already deleted");
 				}
 			}
 			
 			repository.deleteById(id);
-		} catch (EmptyResultDataAccessException e)
+		} catch (EntityNotFoundException e)
 		{
 			throw new MyResourceNotFoundException(
 					messageSource.getCustomMessage(

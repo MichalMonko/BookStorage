@@ -1,16 +1,20 @@
 package com.warchlak.BookStorage.controller;
 
+import com.warchlak.BookStorage.ExceptionHandling.customExceptions.FileStorageException;
+import com.warchlak.BookStorage.ExceptionHandling.customExceptions.MyResourceNotFoundException;
 import com.warchlak.BookStorage.configuration.EnglishMessageSource;
 import com.warchlak.BookStorage.service.StorageService;
+import com.warchlak.BookStorage.util.MediaTypeResolver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/api/images/")
@@ -33,11 +37,37 @@ public class FileAccessController
 	}
 	
 	@PostMapping
+	@ResponseBody
 	public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file)
 	{
-		storageService.store(file);
+		String filename = storageService.store(file);
 		
-		return new ResponseEntity<>(messageSource.getCustomMessage("success.fileSaved",
-				new Object[]{file.getOriginalFilename()}), HttpStatus.OK);
+		return new ResponseEntity<>(filename, HttpStatus.OK);
 	}
+	
+	@GetMapping("{filename:.+}")
+	@ResponseBody
+	public ResponseEntity<byte[]> getImage(@PathVariable("filename") String filename)
+	{
+		try
+		{
+			HttpHeaders headers = new HttpHeaders();
+			MediaType contentType = MediaTypeResolver.getMediaType(filename);
+			
+			if (contentType == null)
+			{
+				throw new FileStorageException(messageSource.getCustomMessage("exception.FileStorageException.invalidFileExtension",
+						new Object[]{filename}));
+			}
+			headers.setContentType(contentType);
+			
+			byte[] imageBytes = storageService.getImage(filename);
+			return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
+		} catch (IOException e)
+		{
+			throw new MyResourceNotFoundException(messageSource.getCustomMessage("exception.ResourceNotFound"));
+		}
+	}
+	
+	
 }

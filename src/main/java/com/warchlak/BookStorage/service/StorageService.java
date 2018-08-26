@@ -9,4 +9,7 @@ public interface StorageService
 	String store(MultipartFile file);
 	
 	boolean delete(String filename) throws IOException;
+	
+	byte [] getImage(String filename) throws IOException;
+	
 }

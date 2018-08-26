@@ -28,11 +28,11 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 		this.messageSource = messageSource;
 	}
 	
-	@ExceptionHandler(value = {RestBadRequestException.class, BadHttpRequest.class})
+	@ExceptionHandler(value = {RestBadRequestException.class, BadHttpRequest.class, FileStorageException.class})
 	public ResponseEntity<Object> handleBadRequest(RuntimeException ex, WebRequest request)
 	{
 		HttpStatus status = HttpStatus.BAD_REQUEST;
-		String body = messageSource.getCustomMessage("exception.BadRequest");
+		String body = ex.getMessage();
 		return super.handleExceptionInternal(ex, buildResponseEntity(body, status),
 				null, status, request);
 	}
