@@ -6,11 +6,14 @@ import com.warchlak.BookStorage.configuration.EnglishMessageSource;
 import com.warchlak.BookStorage.entity.Book;
 import com.warchlak.BookStorage.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -56,6 +59,12 @@ public class IBookService implements BookService
 	public List<Book> findAllByTitle(String title)
 	{
 		return repository.findAllByTitleIgnoreCase(title);
+	}
+	
+	@Override
+	public Page<Book> getPage(PageRequest pageRequest)
+	{
+		return repository.findAll(pageRequest);
 	}
 	
 	@Override
@@ -113,5 +122,25 @@ public class IBookService implements BookService
 					messageSource.getCustomMessage(
 							"exception.ResourceNotFound") + e.getLocalizedMessage());
 		}
+	}
+	
+	@Override
+	public Page<Book> getPageByAnyTag(String tagString, PageRequest pageRequest)
+	{
+		String[] tagArray = tagString.split(",");
+		List<String> tagList = Arrays.asList(tagArray);
+		
+		return repository.findDistinctBooksByTagsInIgnoreCase(tagList, pageRequest);
+	}
+	
+	@Override
+	public Page<Book> getPageByAllTags(String tagString, PageRequest pageRequest)
+	{
+		//STUB
+		String[] tagArray = tagString.split(",");
+		List<String> tagList = Arrays.asList(tagArray);
+		
+//		return repository.findDistinctByTagsEqualsAndTagsContaining(tagList, pageRequest);
+		return null;
 	}
 }
