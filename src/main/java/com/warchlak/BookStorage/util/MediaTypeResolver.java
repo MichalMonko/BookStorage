@@ -12,10 +12,10 @@ public class MediaTypeResolver
 	static
 	{
 		mediaTypesMap = new HashMap<>();
-		mediaTypesMap.put("jpg", MediaType.IMAGE_PNG);
+		mediaTypesMap.put("jpg", MediaType.IMAGE_JPEG);
 		mediaTypesMap.put("png", MediaType.IMAGE_PNG);
 		mediaTypesMap.put("gif", MediaType.IMAGE_GIF);
-		mediaTypesMap.put("JPG", MediaType.IMAGE_PNG);
+		mediaTypesMap.put("JPG", MediaType.IMAGE_JPEG);
 		mediaTypesMap.put("PNG", MediaType.IMAGE_PNG);
 		mediaTypesMap.put("GIF", MediaType.IMAGE_GIF);
 	}
