@@ -115,7 +115,7 @@ public class FileSystemStorageService implements StorageService
 	{
 		Path fileLocation = storageLocation.resolve(filename);
 		Files.delete(fileLocation);
-		removeImage(filename);
+		removeImageFromTracking(filename);
 		
 		return true;
 	}
@@ -146,7 +146,7 @@ public class FileSystemStorageService implements StorageService
 		}
 	}
 	
-	private void removeImage(String filename)
+	public void removeImageFromTracking(String filename)
 	{
 		imageStateMap.remove(filename);
 	}

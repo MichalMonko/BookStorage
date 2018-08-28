@@ -39,7 +39,7 @@ public class bookRestController
 	public Page<Book> getPage(@RequestParam("pageNumber") Integer pageNumber,
 	                          @RequestParam("pageSize") Integer pageSize)
 	{
-		boolean isPageRequestValid = (pageNumber != null && pageSize != null);
+		boolean isPageRequestValid = (pageNumber != null && pageSize != null && pageSize >0 && pageNumber >= 0);
 		if (!isPageRequestValid)
 		{
 			throw new RestBadRequestException(messageSource.getCustomMessage("exception.page.pageNumberOrPageSizeIsNull"));
@@ -54,7 +54,7 @@ public class bookRestController
 	                                  @RequestParam("tags") String tags,
 	                                  @RequestParam(value = "lookupMethod", required = false, defaultValue = "any") String lookupMethod)
 	{
-		boolean isPageRequestValid = (pageNumber != null && pageSize != null);
+		boolean isPageRequestValid = (pageNumber != null && pageSize != null && pageSize >0 && pageNumber >= 0);
 		if (!isPageRequestValid)
 		{
 			throw new RestBadRequestException(messageSource.getCustomMessage("exception.page.pageNumberOrPageSizeIsNull"));

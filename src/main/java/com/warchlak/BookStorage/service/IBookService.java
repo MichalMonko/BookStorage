@@ -75,6 +75,11 @@ public class IBookService implements BookService
 		{
 			throw new InvalidIdState(messageSource.getCustomMessage("exception.InvalidIdState.idShouldBeNull"));
 		}
+		String imageName = book.getImageLink();
+		if (null != imageName)
+		{
+			fileSystemStorageService.removeImageFromTracking(imageName);
+		}
 		return repository.save(book);
 	}
 	
