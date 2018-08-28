@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -127,20 +128,21 @@ public class IBookService implements BookService
 	@Override
 	public Page<Book> getPageByAnyTag(String tagString, PageRequest pageRequest)
 	{
-		String[] tagArray = tagString.split(",");
-		List<String> tagList = Arrays.asList(tagArray);
-		
+		List<String> tagList = processTags(tagString);
 		return repository.findDistinctBooksByTagsInIgnoreCase(tagList, pageRequest);
 	}
 	
 	@Override
 	public Page<Book> getPageByAllTags(String tagString, PageRequest pageRequest)
 	{
-		//STUB
+		List<String> tagList = processTags(tagString);
+		return repository.findBooksMatchingAllTags(tagList, (long) tagList.size(), pageRequest);
+	}
+	
+	private List<String> processTags(String tagString)
+	{
 		String[] tagArray = tagString.split(",");
 		List<String> tagList = Arrays.asList(tagArray);
-		
-//		return repository.findDistinctByTagsEqualsAndTagsContaining(tagList, pageRequest);
-		return null;
+		return tagList.stream().map(String::toLowerCase).collect(Collectors.toList());
 	}
 }
